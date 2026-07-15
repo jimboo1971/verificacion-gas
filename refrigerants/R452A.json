@@ -1,0 +1,32 @@
+{
+  "refrigerant": "R452A",
+  "name": "Opteon XP44 (R32/R125/R1234yf)",
+  "type": "zeotropo",
+  "glide_K": 3.7,
+  "safety_class": "A1",
+  "pressure_unit": "bar_abs",
+  "temp_unit": "C",
+  "note": "Mezcla zeotropa con glide ~3,7 K. Superheat usa DEW, subcooling usa BUBBLE. DATOS ORIENTATIVOS: verificar contra ficha del fabricante.",
+  "table": [
+    {"p": 1.0, "bubble": -47.0, "dew": -43.2},
+    {"p": 1.5, "bubble": -38.3, "dew": -34.7},
+    {"p": 2.0, "bubble": -31.5, "dew": -28.1},
+    {"p": 2.5, "bubble": -26.0, "dew": -22.7},
+    {"p": 3.0, "bubble": -21.2, "dew": -18.1},
+    {"p": 3.5, "bubble": -17.0, "dew": -14.0},
+    {"p": 4.0, "bubble": -13.3, "dew": -10.4},
+    {"p": 5.0, "bubble": -6.8, "dew": -4.0},
+    {"p": 6.0, "bubble": -1.2, "dew": 1.5},
+    {"p": 7.0, "bubble": 3.6, "dew": 6.3},
+    {"p": 8.0, "bubble": 8.0, "dew": 10.6},
+    {"p": 9.0, "bubble": 12.0, "dew": 14.5},
+    {"p": 10.0, "bubble": 15.6, "dew": 18.1},
+    {"p": 12.0, "bubble": 22.2, "dew": 24.5},
+    {"p": 14.0, "bubble": 27.9, "dew": 30.2},
+    {"p": 16.0, "bubble": 33.1, "dew": 35.2},
+    {"p": 18.0, "bubble": 37.8, "dew": 39.8},
+    {"p": 20.0, "bubble": 42.1, "dew": 44.0},
+    {"p": 22.0, "bubble": 46.0, "dew": 47.8},
+    {"p": 25.0, "bubble": 51.4, "dew": 53.1}
+  ]
+}

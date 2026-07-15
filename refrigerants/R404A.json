@@ -1,0 +1,32 @@
+{
+  "refrigerant": "R404A",
+  "name": "Mezcla R125/R143a/R134a (44/52/4)",
+  "type": "casi-azeotropo",
+  "glide_K": 0.7,
+  "safety_class": "A1",
+  "pressure_unit": "bar_abs",
+  "temp_unit": "C",
+  "note": "Glide pequeño (~0,7 K). Superheat usa DEW, subcooling usa BUBBLE. Verificar contra ficha del fabricante.",
+  "table": [
+    {"p": 1.0, "bubble": -46.5, "dew": -45.8},
+    {"p": 1.5, "bubble": -37.7, "dew": -37.0},
+    {"p": 2.0, "bubble": -30.9, "dew": -30.3},
+    {"p": 2.5, "bubble": -25.4, "dew": -24.7},
+    {"p": 3.0, "bubble": -20.6, "dew": -20.0},
+    {"p": 3.5, "bubble": -16.4, "dew": -15.8},
+    {"p": 4.0, "bubble": -12.7, "dew": -12.1},
+    {"p": 5.0, "bubble": -6.2, "dew": -5.6},
+    {"p": 6.0, "bubble": -0.7, "dew": -0.1},
+    {"p": 7.0, "bubble": 4.2, "dew": 4.8},
+    {"p": 8.0, "bubble": 8.6, "dew": 9.2},
+    {"p": 9.0, "bubble": 12.6, "dew": 13.2},
+    {"p": 10.0, "bubble": 16.3, "dew": 16.8},
+    {"p": 12.0, "bubble": 22.9, "dew": 23.4},
+    {"p": 14.0, "bubble": 28.6, "dew": 29.1},
+    {"p": 16.0, "bubble": 33.8, "dew": 34.3},
+    {"p": 18.0, "bubble": 38.5, "dew": 39.0},
+    {"p": 20.0, "bubble": 42.8, "dew": 43.2},
+    {"p": 22.0, "bubble": 46.7, "dew": 47.1},
+    {"p": 25.0, "bubble": 52.1, "dew": 52.5}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "refrigerant": "R448A",
+  "name": "Solstice N40 (R32/R125/R1234yf/R134a/R1234ze)",
+  "type": "zeotropo",
+  "glide_K": 6.0,
+  "safety_class": "A1",
+  "pressure_unit": "bar_abs",
+  "temp_unit": "C",
+  "note": "Mezcla zeotropa con glide ~6 K. Superheat usa DEW, subcooling usa BUBBLE. DATOS ORIENTATIVOS: verificar contra ficha Honeywell antes de uso crítico.",
+  "table": [
+    {"p": 1.0, "bubble": -46.1, "dew": -40.2},
+    {"p": 1.5, "bubble": -37.1, "dew": -31.7},
+    {"p": 2.0, "bubble": -30.1, "dew": -25.1},
+    {"p": 2.5, "bubble": -24.4, "dew": -19.7},
+    {"p": 3.0, "bubble": -19.5, "dew": -15.1},
+    {"p": 3.5, "bubble": -15.2, "dew": -11.0},
+    {"p": 4.0, "bubble": -11.4, "dew": -7.4},
+    {"p": 5.0, "bubble": -4.7, "dew": -1.0},
+    {"p": 6.0, "bubble": 1.0, "dew": 4.5},
+    {"p": 7.0, "bubble": 6.0, "dew": 9.3},
+    {"p": 8.0, "bubble": 10.5, "dew": 13.7},
+    {"p": 9.0, "bubble": 14.6, "dew": 17.6},
+    {"p": 10.0, "bubble": 18.4, "dew": 21.3},
+    {"p": 12.0, "bubble": 25.1, "dew": 27.8},
+    {"p": 14.0, "bubble": 31.0, "dew": 33.6},
+    {"p": 16.0, "bubble": 36.3, "dew": 38.7},
+    {"p": 18.0, "bubble": 41.1, "dew": 43.4},
+    {"p": 20.0, "bubble": 45.5, "dew": 47.7},
+    {"p": 22.0, "bubble": 49.5, "dew": 51.6},
+    {"p": 25.0, "bubble": 55.1, "dew": 57.0}
+  ]
+}

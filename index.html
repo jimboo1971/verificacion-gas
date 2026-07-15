@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>DiagClima · Diagnóstico de refrigeración</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <span class="logo">❄️</span>
+    <h1>DiagClima</h1>
+    <span class="offline-dot" id="netDot" title="Estado de red"></span>
+    <span class="ver">v1.0</span>
+  </header>
+
+  <div class="steps" id="steps">
+    <div class="s on"></div><div class="s"></div><div class="s"></div><div class="s"></div>
+  </div>
+
+  <!-- ============ VISTA: DIAGNÓSTICO ============ -->
+  <section id="viewDiag">
+
+    <!-- Paso 1: Checklist -->
+    <div class="card" id="paso1">
+      <h2>1 · Comprobaciones previas (obligatorio)</h2>
+      <div id="checklist">
+        <div class="check"><input type="checkbox" id="c1"><label for="c1">Filtros limpios</label></div>
+        <div class="check"><input type="checkbox" id="c2"><label for="c2">Condensador limpio</label></div>
+        <div class="check"><input type="checkbox" id="c3"><label for="c3">Ventiladores operativos</label></div>
+        <div class="check"><input type="checkbox" id="c4"><label for="c4">Equipo estabilizado ≥ 10 minutos</label></div>
+        <div class="check"><input type="checkbox" id="c5"><label for="c5">Todas las tapas colocadas</label></div>
+      </div>
+      <button class="btn-primary" id="btnPaso1" disabled>Continuar</button>
+      <div class="hint" style="margin-top:8px">No se permite el cálculo hasta confirmar todas las comprobaciones.</div>
+    </div>
+
+    <!-- Paso 2: Equipo -->
+    <div class="card hidden" id="paso2">
+      <h2>2 · Datos del equipo</h2>
+      <div class="row">
+        <div>
+          <label>Tipo de equipo</label>
+          <select id="tipoEquipo">
+            <option>Split pared</option><option>Cassette</option><option>Conductos</option>
+            <option>VRF</option><option>Aerotermia</option><option>Chiller</option>
+            <option>Refrigeración comercial</option><option>Cámara frigorífica</option>
+          </select>
+        </div>
+        <div>
+          <label>Refrigerante</label>
+          <select id="ref"></select>
+        </div>
+      </div>
+      <div class="hint" id="refInfo"></div>
+
+      <label>Dispositivo de expansión</label>
+      <select id="dispositivo">
+        <option value="txv">TXV (válvula termostática)</option>
+        <option value="eev">EEV (electrónica)</option>
+        <option value="capilar">Capilar / orificio fijo</option>
+        <option value="desconocido">No lo sé</option>
+      </select>
+      <div class="hint" id="dispGuia"></div>
+
+      <div class="row">
+        <button class="btn-sec" id="btnAtras2" style="flex:0 0 auto">← Atrás</button>
+        <button class="btn-primary" id="btnPaso2" style="margin-top:0">Continuar</button>
+      </div>
+    </div>
+
+    <!-- Paso 3: Funcionamiento -->
+    <div class="card hidden" id="paso3">
+      <h2>3 · Datos de funcionamiento</h2>
+
+      <label>Presión de BAJA (aspiración)</label>
+      <div class="row">
+        <div style="flex:2"><input id="pbaja" type="number" inputmode="decimal" placeholder="valor"></div>
+        <div><select id="ubaja"><option>bar</option><option>psi</option><option>kPa</option><option>MPa</option></select></div>
+      </div>
+      <div class="toggle"><input type="checkbox" id="relbaja" checked><label for="relbaja" style="margin:0">Presión relativa (manométrica)</label></div>
+      <div class="sat" id="satBaja"></div>
+
+      <label>Temp. línea de ASPIRACIÓN (°C)</label>
+      <input id="tasp" type="number" inputmode="decimal" placeholder="sonda de contacto">
+
+      <label>Presión de ALTA (descarga)</label>
+      <div class="row">
+        <div style="flex:2"><input id="palta" type="number" inputmode="decimal" placeholder="valor"></div>
+        <div><select id="ualta"><option>bar</option><option>psi</option><option>kPa</option><option>MPa</option></select></div>
+      </div>
+      <div class="toggle"><input type="checkbox" id="relalta" checked><label for="relalta" style="margin:0">Presión relativa (manométrica)</label></div>
+      <div class="sat" id="satAlta"></div>
+
+      <label>Temp. línea de LÍQUIDO (°C)</label>
+      <input id="tliq" type="number" inputmode="decimal" placeholder="sonda de contacto">
+
+      <div class="row">
+        <div><label>Temp. exterior (°C)</label><input id="text" type="number" inputmode="decimal" placeholder="bulbo seco"></div>
+        <div><label>Temp. interior retorno (°C)</label><input id="tint" type="number" inputmode="decimal" placeholder="opcional"></div>
+      </div>
+
+      <div id="errores"></div>
+      <div class="row">
+        <button class="btn-sec" id="btnAtras3" style="flex:0 0 auto">← Atrás</button>
+        <button class="btn-primary" id="btnPaso3" style="margin-top:0">Continuar</button>
+      </div>
+    </div>
+
+    <!-- Paso 4: Carga de refrigerante -->
+    <div class="card hidden" id="paso4">
+      <h2>4 · Carga de refrigerante (opcional)</h2>
+      <div class="hint">Con estos datos se calcula la <b>carga nominal exacta</b> (la que debería tener) y se estima el desvío en gramos. Si lo omites, el diagnóstico se dará igualmente sin gramos.</div>
+
+      <div class="row">
+        <div>
+          <label>Carga base de fábrica (g)</label>
+          <input id="cBase" type="number" inputmode="decimal" placeholder="de la placa">
+          <div class="hint">Imprescindible para dar gramos.</div>
+        </div>
+        <div>
+          <label>Long. sin recarga (m)</label>
+          <input id="cFree" type="number" inputmode="decimal" placeholder="ej. 5 (VRF: 0)">
+        </div>
+      </div>
+
+      <label style="margin-top:14px">Tramos de línea de LÍQUIDO</label>
+      <div class="hint">Añade un tramo por cada diámetro. Los g/m se calculan según Ø y refrigerante; edítalos si el fabricante da otros.</div>
+      <div id="tramos"></div>
+      <div class="row" style="margin-top:8px;align-items:flex-end">
+        <div style="flex:2"><label>Diámetro</label><select id="tDiam"></select></div>
+        <div><label>Metros</label><input id="tLen" type="number" inputmode="decimal" placeholder="m"></div>
+        <div style="flex:0 0 auto"><button class="btn-sec" id="btnAddTramo">+ Añadir</button></div>
+      </div>
+
+      <label>Ajuste por unidades interiores (g) <span class="hint">— opcional, VRF/multisplit</span></label>
+      <input id="cExtraUds" type="number" inputmode="decimal" placeholder="si el fabricante lo indica">
+
+      <div class="note" id="cargaBox"></div>
+      <div class="toggle"><input type="checkbox" id="esVRF"><label for="esVRF" style="margin:0">Es VRF / multisplit (no estimar gramos por presión)</label></div>
+
+      <div class="row">
+        <button class="btn-sec" id="btnAtras4" style="flex:0 0 auto">← Atrás</button>
+        <button class="btn-primary" id="btnCalcular" style="margin-top:0">Diagnosticar</button>
+      </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="card hidden" id="resultado"></div>
+  </section>
+
+  <!-- ============ VISTA: HISTORIAL ============ -->
+  <section id="viewHist" class="hidden">
+    <div class="card">
+      <h2>Historial de intervenciones</h2>
+      <div id="histList"></div>
+      <button class="btn-sec" id="btnVaciar" style="width:100%;margin-top:10px">Vaciar historial</button>
+    </div>
+  </section>
+
+  <!-- ============ VISTA: AJUSTES ============ -->
+  <section id="viewSet" class="hidden">
+    <div class="card">
+      <h2>Datos del técnico / empresa</h2>
+      <div class="hint">Se guardan en este dispositivo y aparecen en la cabecera de los informes.</div>
+      <label>Técnico</label><input id="sTecnico">
+      <label>Empresa</label><input id="sEmpresa">
+      <label>NIF/CIF</label><input id="sNif">
+      <div class="row">
+        <div><label>Teléfono</label><input id="sTelefono"></div>
+        <div><label>Email</label><input id="sEmail" type="email"></div>
+      </div>
+      <label>Nº carnet / RITE</label><input id="sCarnet">
+      <label>Logo (imagen)</label><input id="sLogo" type="file" accept="image/*">
+      <div id="logoPrev"></div>
+      <button class="btn-primary" id="btnGuardarSet">Guardar datos</button>
+    </div>
+  </section>
+
+  <!-- ============ VISTA: CONVERSOR ============ -->
+  <section id="viewConv" class="hidden">
+    <div class="card">
+      <h2>Conversor de unidades</h2>
+      <label>Presión</label>
+      <div class="row">
+        <div><input id="cvP" type="number" inputmode="decimal" placeholder="valor"></div>
+        <div><select id="cvPu"><option>bar</option><option>psi</option><option>kPa</option><option>MPa</option></select></div>
+      </div>
+      <div class="note" id="cvPout">—</div>
+      <label>Temperatura</label>
+      <div class="row">
+        <div><input id="cvT" type="number" inputmode="decimal" placeholder="valor"></div>
+        <div><select id="cvTu"><option>°C</option><option>°F</option></select></div>
+      </div>
+      <div class="note" id="cvTout">—</div>
+    </div>
+  </section>
+</div>
+
+<!-- Nav inferior -->
+<nav class="nav">
+  <button data-view="Diag" class="on"><span class="ic">🩺</span>Diagnóstico</button>
+  <button data-view="Hist"><span class="ic">🗂️</span>Historial</button>
+  <button data-view="Conv"><span class="ic">🔁</span>Conversor</button>
+  <button data-view="Set"><span class="ic">⚙️</span>Ajustes</button>
+</nav>
+
+<!-- Dialogo guardar -->
+<dialog id="dlgGuardar">
+  <h2>Guardar intervención</h2>
+  <label>Cliente</label><input id="gCliente">
+  <label>Ubicación</label><input id="gUbic">
+  <label>Modelo</label><input id="gModelo">
+  <label>Fabricante</label><input id="gFab">
+  <label>Fotografía</label><input id="gFoto" type="file" accept="image/*" capture="environment">
+  <label>Observaciones</label><textarea id="gObs"></textarea>
+  <div class="row" style="margin-top:12px">
+    <button class="btn-sec" id="gCancel" style="flex:1">Cancelar</button>
+    <button class="btn-primary" id="gOk" style="margin-top:0;flex:1">Guardar</button>
+  </div>
+</dialog>
+
+<script src="js/pt.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/calculator.js"></script>
+<script src="js/diagnosis.js"></script>
+<script src="js/charge.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/report.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
