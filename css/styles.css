@@ -85,3 +85,20 @@ ul.acc li{margin:5px 0;font-size:.9rem}
 .toggle input{width:auto}
 dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--txt);max-width:92%;padding:18px}
 dialog::backdrop{background:rgba(0,0,0,.6)}
+
+/* Tablas de referencia y comparativa (pasos 3 y 4) */
+table.tabla-ref,table.tabla-comp{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.85rem}
+table.tabla-ref th,table.tabla-comp th{text-align:left;color:var(--muted);font-weight:600;padding:6px 6px;border-bottom:1px solid var(--line)}
+table.tabla-ref td,table.tabla-comp td{padding:8px 6px;border-bottom:1px solid var(--line)}
+table.tabla-ref tr:last-child td,table.tabla-comp tr:last-child td{border-bottom:0}
+table.tabla-comp td.cmp-ok{background:rgba(34,197,94,.16);color:#bbf7d0;border-radius:6px;font-weight:700}
+table.tabla-comp td.cmp-bad{background:rgba(239,68,68,.16);color:#fecaca;border-radius:6px;font-weight:700}
+
+/* Tarjetas por unidad interior (pasos 2 y 4) */
+.ud-card{border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;margin-top:10px;background:var(--card2)}
+.ud-card .ud-title{font-size:.85rem;font-weight:700;color:var(--accent)}
+.ud-card .ud-res{margin-top:6px}
+.ud-card input,.ud-card select{background:var(--card)}
+
+/* Rango correcto de trabajo bajo cada casilla (paso 3) */
+.sat.rango{color:var(--ok)}

@@ -15,7 +15,7 @@
     <span class="logo">❄️</span>
     <h1>DiagClima</h1>
     <span class="offline-dot" id="netDot" title="Estado de red"></span>
-    <span class="ver">v1.0</span>
+    <span class="ver">v1.3</span>
   </header>
 
   <div class="steps" id="steps">
@@ -39,10 +39,25 @@
       <div class="hint" style="margin-top:8px">No se permite el cálculo hasta confirmar todas las comprobaciones.</div>
     </div>
 
-    <!-- Paso 2: Equipo -->
+    <!-- Paso 2: Unidades interiores y datos del equipo -->
     <div class="card hidden" id="paso2">
-      <h2>2 · Datos del equipo</h2>
-      <div class="row">
+      <h2>2 · Unidades interiores y datos del equipo</h2>
+
+      <label>¿Cuántas unidades interiores tiene el sistema? <b style="color:var(--bad)">*</b></label>
+      <input id="numUds" type="number" inputmode="numeric" min="1" max="10" step="1" value="1">
+      <div class="hint">Obligatorio: indica el número de unidades interiores y el tipo de cada una. No se puede continuar sin contestarlo.</div>
+
+      <div id="udsBox"></div>
+
+      <label style="margin-top:14px">Modelo unidad exterior</label>
+      <input id="modeloExt" type="text" placeholder="p.ej. MUZ-AP25VG" autocomplete="off">
+
+      <button class="btn-sec" id="btnBuscarEquipo" style="width:100%;margin-top:12px">🔍 Buscar datos del equipo</button>
+      <div class="hint" id="equipoLookupHint">Al indicar un modelo se busca a fondo primero en nuestra base de datos y, si no hay resultado, en internet. Solo se continúa cuando la búsqueda ha terminado y los datos se muestran en pantalla.</div>
+      <div id="equipoResumen"></div>
+      <div id="condicionesUds"></div>
+
+      <div class="row" style="margin-top:10px">
         <div>
           <label>Tipo de equipo</label>
           <select id="tipoEquipo">
@@ -67,15 +82,26 @@
       </select>
       <div class="hint" id="dispGuia"></div>
 
+      <label style="margin-top:14px">Fabricante</label>
+      <input id="fabricante" type="text" placeholder="p.ej. Mitsubishi Electric" autocomplete="off">
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn-sec" id="btnGuardarFicha" style="flex:1">💾 Guardar ficha del equipo</button>
+      </div>
+      <div class="hint" id="fichaHint">Se guarda en nuestra base de datos local para reconocer este modelo automáticamente la próxima vez.</div>
+
+      <div id="err2"></div>
       <div class="row">
         <button class="btn-sec" id="btnAtras2" style="flex:0 0 auto">← Atrás</button>
         <button class="btn-primary" id="btnPaso2" style="margin-top:0">Continuar</button>
       </div>
     </div>
 
-    <!-- Paso 3: Funcionamiento -->
+    <!-- Paso 3: Medidas de funcionamiento -->
     <div class="card hidden" id="paso3">
-      <h2>3 · Datos de funcionamiento</h2>
+      <h2>3 · Medidas de funcionamiento</h2>
+      <div id="tablaRefBox"></div>
+      <div class="hint">El recalentamiento (SH) y el subenfriamiento (SC) se calculan y muestran en grados Celsius (°C).</div>
 
       <label>Presión de BAJA (aspiración)</label>
       <div class="row">
@@ -84,9 +110,11 @@
       </div>
       <div class="toggle"><input type="checkbox" id="relbaja" checked><label for="relbaja" style="margin:0">Presión relativa (manométrica)</label></div>
       <div class="sat" id="satBaja"></div>
+      <div class="sat rango" id="rangoBaja"></div>
 
       <label>Temp. línea de ASPIRACIÓN (°C)</label>
       <input id="tasp" type="number" inputmode="decimal" placeholder="sonda de contacto">
+      <div class="sat rango" id="rangoTasp"></div>
 
       <label>Presión de ALTA (descarga)</label>
       <div class="row">
@@ -95,9 +123,11 @@
       </div>
       <div class="toggle"><input type="checkbox" id="relalta" checked><label for="relalta" style="margin:0">Presión relativa (manométrica)</label></div>
       <div class="sat" id="satAlta"></div>
+      <div class="sat rango" id="rangoAlta"></div>
 
       <label>Temp. línea de LÍQUIDO (°C)</label>
       <input id="tliq" type="number" inputmode="decimal" placeholder="sonda de contacto">
+      <div class="sat rango" id="rangoTliq"></div>
 
       <div class="row">
         <div><label>Temp. exterior (°C)</label><input id="text" type="number" inputmode="decimal" placeholder="bulbo seco"></div>
@@ -111,10 +141,12 @@
       </div>
     </div>
 
-    <!-- Paso 4: Carga de refrigerante -->
+    <!-- Paso 4: Tubería y carga de refrigerante -->
     <div class="card hidden" id="paso4">
-      <h2>4 · Carga de refrigerante (opcional)</h2>
-      <div class="hint">Con estos datos se calcula la <b>carga nominal exacta</b> (la que debería tener) y se estima el desvío en gramos. Si lo omites, el diagnóstico se dará igualmente sin gramos.</div>
+      <h2>4 · Tubería y carga de refrigerante</h2>
+      <div class="hint">Indica, para cada unidad interior, el tipo de tubo de clima existente y los metros de su ramal. Con la carga base de fábrica, la longitud sin recarga y los g/m guardados en el paso 2 se calcula la carga adicional de refrigerante.</div>
+
+      <div id="fichaPaso4"></div>
 
       <div class="row">
         <div>
@@ -127,19 +159,22 @@
           <input id="cFree" type="number" inputmode="decimal" placeholder="ej. 5 (VRF: 0)">
         </div>
       </div>
-
-      <label style="margin-top:14px">Tramos de línea de LÍQUIDO</label>
-      <div class="hint">Añade un tramo por cada diámetro. Los g/m se calculan según Ø y refrigerante; edítalos si el fabricante da otros.</div>
-      <div id="tramos"></div>
-      <div class="row" style="margin-top:8px;align-items:flex-end">
-        <div style="flex:2"><label>Diámetro</label><select id="tDiam"></select></div>
-        <div><label>Metros</label><input id="tLen" type="number" inputmode="decimal" placeholder="m"></div>
-        <div style="flex:0 0 auto"><button class="btn-sec" id="btnAddTramo">+ Añadir</button></div>
+      <div class="row">
+        <div>
+          <label>Recarga (g/m)</label>
+          <input id="cGm" type="number" inputmode="decimal" placeholder="auto por Ø">
+          <div class="hint">Del fabricante (paso 2). Vacío = según diámetro del tubo.</div>
+        </div>
+        <div>
+          <label>Ajuste por uds. interiores (g)</label>
+          <input id="cExtraUds" type="number" inputmode="decimal" placeholder="si el fabricante lo indica">
+        </div>
       </div>
 
-      <label>Ajuste por unidades interiores (g) <span class="hint">— opcional, VRF/multisplit</span></label>
-      <input id="cExtraUds" type="number" inputmode="decimal" placeholder="si el fabricante lo indica">
+      <label style="margin-top:14px">Tubería por unidad interior</label>
+      <div id="ramales"></div>
 
+      <div id="tablaCompBox"></div>
       <div class="note" id="cargaBox"></div>
       <div class="toggle"><input type="checkbox" id="esVRF"><label for="esVRF" style="margin:0">Es VRF / multisplit (no estimar gramos por presión)</label></div>
 
@@ -232,6 +267,9 @@
 <script src="js/settings.js"></script>
 <script src="js/report.js"></script>
 <script src="js/storage.js"></script>
+<script src="js/equipoDB.js"></script>
+<script src="js/modelosDB.js"></script>
+<script src="js/webLookup.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/app.js"></script>
 </body>

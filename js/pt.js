@@ -68,9 +68,28 @@
 
   function meta(ref) { return cache[ref] || null; }
 
+  /* ---- Inversa: presión de saturación (bar abs) para una temperatura ----
+     campo = 'bubble' | 'dew'. Interpolación lineal sobre la misma tabla.   */
+  function pDe(ref, tempC, campo) {
+    const tabla = cache[ref];
+    if (!tabla) throw new Error('Tabla no cargada: ' + ref);
+    const t = tabla.table;
+    if (tempC <= t[0][campo]) return t[0].p;
+    const ult = t[t.length - 1];
+    if (tempC >= ult[campo]) return ult.p;
+    for (let i = 0; i < t.length - 1; i++) {
+      const a = t[i], b = t[i + 1];
+      if (tempC >= a[campo] && tempC <= b[campo]) {
+        const f = (tempC - a[campo]) / (b[campo] - a[campo]);
+        return a.p + (b.p - a.p) * f;
+      }
+    }
+    return NaN;
+  }
+
   global.PT = {
     LISTA, PRESION_ATM, aBarAbs, cargar, precargarTodos,
-    tSaturacion, meta,
+    tSaturacion, meta, pDe,
     tDew:    (ref, bar) => tSaturacion(ref, bar, 'dew'),
     tBubble: (ref, bar) => tSaturacion(ref, bar, 'bubble')
   };
