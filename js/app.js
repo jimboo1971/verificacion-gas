@@ -569,7 +569,7 @@
     guardarFicha(true);
 
     UI.renderResultado($('resultado'), calc, diag, avisos, PT.meta(ref), carga, desv);
-    $('btnNuevo').onclick = () => { mostrarPaso(1); resetChecklist(); };
+    $('btnNuevo').onclick = () => { resetFormulario(); mostrarPaso(1); };
     $('btnGuardar').onclick = () => $('dlgGuardar').showModal();
     $('btnPdf').onclick = () => Report.abrirImprimible(datosInforme());
     $('btnCompartir').onclick = async () => {
@@ -583,6 +583,42 @@
   function resetChecklist() {
     document.querySelectorAll('#checklist input').forEach(c => c.checked = false);
     $('btnPaso1').disabled = true;
+  }
+
+  /* Deja todos los campos en blanco o en su valor por defecto para empezar
+     un diagnóstico nuevo desde cero. */
+  function resetFormulario() {
+    // Paso 1
+    resetChecklist();
+    // Paso 2
+    SISTEMA.unidades = [nuevaUd()];
+    SISTEMA.modeloExt = '';
+    $('numUds').value = 1;
+    $('modeloExt').value = '';
+    equipoActual = null;
+    BUSQUEDA.estado = 'sin';
+    renderUnidades();
+    $('equipoLookupHint').textContent = 'Al indicar un modelo se busca a fondo primero en nuestra base de datos y, si no hay resultado, en internet. Solo se continúa cuando la búsqueda ha terminado y los datos se muestran en pantalla.';
+    $('equipoResumen').innerHTML = '';
+    $('tipoEquipo').selectedIndex = 0;
+    $('ref').selectedIndex = 0;
+    $('dispositivo').value = 'txv';
+    $('fabricante').value = '';
+    $('fichaHint').textContent = 'Se guarda en nuestra base de datos local para reconocer este modelo automáticamente la próxima vez.';
+    $('err2').innerHTML = '';
+    actualizarRefInfo(); actualizarGuiaDisp(); pintarCondiciones();
+    // Paso 3
+    ['pbaja', 'tasp', 'palta', 'tliq', 'text', 'tint'].forEach(id => $(id).value = '');
+    $('ubaja').selectedIndex = 0; $('ualta').selectedIndex = 0;
+    $('relbaja').checked = true; $('relalta').checked = true;
+    ['satBaja', 'satAlta', 'rangoBaja', 'rangoAlta', 'rangoTasp', 'rangoTliq'].forEach(id => $(id).textContent = '');
+    $('errores').innerHTML = '';
+    // Paso 4
+    ['cBase', 'cFree', 'cGm', 'cExtraUds'].forEach(id => $(id).value = '');
+    RAMALES = [];
+    $('esVRF').checked = false;
+    $('cargaBox').innerHTML = ''; $('tablaCompBox').innerHTML = ''; $('fichaPaso4').innerHTML = '';
+    ultimo = null;
   }
 
   /* ---------- Guardar intervención ---------- */

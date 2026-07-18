@@ -1,7 +1,7 @@
 /* ==========================================================================
    service-worker.js — Cache offline (App Shell + tablas de refrigerantes)
    ========================================================================== */
-const CACHE = 'diagclima-v7';
+const CACHE = 'diagclima-v8';
 const ASSETS = [
   './',
   './index.html',
